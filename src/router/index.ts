@@ -8,6 +8,11 @@ const router = createRouter({
       name: 'start',
       component: () => import('@/views/StartView.vue')
     },
+    {
+      path: '/scan',
+      name: 'scan',
+      component: () => import('@/views/ScanView.vue')
+    },
   ]
 })
 
