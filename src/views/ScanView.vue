@@ -1,11 +1,13 @@
 <script setup lang="ts">
 import { ref } from "vue";
 import { useRouter } from "vue-router";
+import { useCartStore } from '@/stores/cart'
 import { getAllProducts } from "@/data/products";
 import KioskButton from "@/components/KioskButton.vue";
 import ItemCard from "@/components/ItemCard.vue";
 
 const router = useRouter();
+const cartStore = useCartStore()
 
 const skuInput = ref("");
 const products = getAllProducts();

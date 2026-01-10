@@ -13,6 +13,11 @@ const router = createRouter({
       name: 'scan',
       component: () => import('@/views/ScanView.vue')
     },
+    {
+      path: '/cart',
+      name: 'cart',
+      component: () => import('@/views/CartView.vue')
+    },
   ]
 })
 
