@@ -1,10 +1,9 @@
 <script setup lang="ts">
-  //Main app component where the router view outlet is handled
 </script>
 
 <template>
-  <div id="app">
-    <router-view />
+  <div>
+    <h1>Hello World</h1>
   </div>
 </template>
 

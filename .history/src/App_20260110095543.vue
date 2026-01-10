@@ -1,5 +1,4 @@
 <script setup lang="ts">
-  //Main app component where the router view outlet is handled
 </script>
 
 <template>
