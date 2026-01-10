@@ -1,20 +1,66 @@
 <script setup lang="ts">
 import { ref } from "vue";
 import { useRouter } from "vue-router";
-import { useCartStore } from '@/stores/cart'
-import { getAllProducts } from "@/data/products";
+import { useCartStore } from "@/stores/cart";
+import { getAllProducts, productBySku } from "@/data/products";
 import KioskButton from "@/components/KioskButton.vue";
 import ItemCard from "@/components/ItemCard.vue";
 
 const router = useRouter();
-const cartStore = useCartStore()
+const cartStore = useCartStore();
 
 const skuInput = ref("");
+const errorMessage = ref("");
+const successMessage = ref("");
 const products = getAllProducts();
 
-function handleAddBySku() {}
+//Clear error messages when user starts typing
+function clearError() {
+  errorMessage.value = "";
+  successMessage.value = "";
+}
 
-function handleAddProduct(product: (typeof products)[0]) {}
+function handleAddBySku() {
+  // Trim whitespace and convert to uppercase for consistency
+  const sku = skuInput.value.trim().toUpperCase()
+  
+  // Validation: ignore empty input
+  if (!sku) {
+    errorMessage.value = 'Please enter a SKU'
+    setTimeout(() => {
+      errorMessage.value = ''
+    }, 2000)
+    return
+  }
+
+  // Look up product
+  const product = productBySku(sku)
+  if (product) {
+    cartStore.addProduct(product, 1)
+    skuInput.value = ''
+    errorMessage.value = ''
+    // Show success feedback
+    successMessage.value = `Added ${product.name}`
+    setTimeout(() => {
+      successMessage.value = ''
+    }, 2000)
+  } else {
+    // Friendly error message
+    errorMessage.value = `SKU "${sku}" not found. Please check and try again.`
+    setTimeout(() => {
+      errorMessage.value = ''
+    }, 4000)
+  }
+}
+
+function handleAddProduct(product: typeof products[0]) {
+  cartStore.addProduct(product, 1)
+  errorMessage.value = ''
+  successMessage.value = `Added ${product.name}`
+  setTimeout(() => {
+    successMessage.value = ''
+  }, 2000)
+}
 </script>
 
 <template>
@@ -34,11 +80,20 @@ function handleAddProduct(product: (typeof products)[0]) {}
             class="scan-input"
             placeholder="Enter SKU or scan barcode"
             @keyup.enter="handleAddBySku"
+            @input="clearError"
             autofocus
           />
           <KioskButton variant="primary" @click="handleAddBySku">
             Add
           </KioskButton>
+        </div>
+
+        <!-- Error and success messages -->
+        <div v-if="errorMessage" class="error-message" role="alert">
+          {{ errorMessage }}
+        </div>
+        <div v-if="successMessage" class="success-message" role="status">
+          {{ successMessage }}
         </div>
       </div>
 
@@ -59,13 +114,13 @@ function handleAddProduct(product: (typeof products)[0]) {}
     <footer class="scan-view__footer">
       <div class="footer-cart-info">
         <span class="footer-cart-label">Items in cart:</span>
-        <span class="footer-cart-count">0</span>
+        <span class="footer-cart-count">{{ cartStore.totalItems }}</span>
       </div>
       <div class="footer-actions">
         <KioskButton variant="secondary" @click="router.push('/cart')">
           View Cart
         </KioskButton>
-        <KioskButton variant="primary" @click="router.push('/checkout')">
+        <KioskButton variant="primary" :disabled="cartStore.totalItems === 0" @click="router.push('/checkout')">
           Checkout
         </KioskButton>
       </div>
@@ -127,6 +182,24 @@ function handleAddProduct(product: (typeof products)[0]) {}
 .scan-input:focus {
   border-color: #4caf50;
   box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.1);
+}
+
+.error-message {
+  padding: 16px;
+  background: #ffebee;
+  color: #c62828;
+  border-radius: 8px;
+  font-size: 16px;
+  border-left: 4px solid #c62828;
+}
+
+.success-message {
+  padding: 16px;
+  background: #e8f5e9;
+  color: #2e7d32;
+  border-radius: 8px;
+  font-size: 16px;
+  border-left: 4px solid #4CAF50;
 }
 
 .scan-view__products {
