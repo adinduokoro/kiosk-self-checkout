@@ -67,4 +67,97 @@ const cartStore = useCartStore();
   </div>
 </template>
 
-<style scoped></style>
+<style scoped>
+  .cart-view {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  max-width: 800px;
+  margin: 0 auto;
+  overflow: hidden;
+}
+
+.page-header {
+  padding: 24px 24px 16px;
+  border-bottom: 2px solid #e0e0e0;
+  background: white;
+}
+
+.page-header__title {
+  font-size: 36px;
+  font-weight: 700;
+  color: #333;
+  margin: 0;
+}
+
+.cart-view__content {
+  flex: 1;
+  overflow-y: auto;
+  padding: 24px;
+}
+
+.empty-cart {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 80px 20px;
+  min-height: 400px;
+}
+
+.empty-cart__icon {
+  font-size: 64px;
+  margin-bottom: 24px;
+  opacity: 0.5;
+}
+
+.empty-cart__title {
+  font-size: 28px;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 12px;
+}
+
+.empty-cart__message {
+  font-size: 18px;
+  color: #666;
+  margin-bottom: 32px;
+  max-width: 400px;
+}
+
+.cart-lines {
+  margin-bottom: 24px;
+}
+
+.cart-summary {
+  padding: 20px;
+  background: #f5f5f5;
+  border-radius: 8px;
+  margin-bottom: 24px;
+}
+
+.subtotal {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.subtotal-label {
+  font-size: 24px;
+  font-weight: 600;
+  color: #333;
+}
+
+.subtotal-value {
+  font-size: 28px;
+  font-weight: 700;
+  color: #4CAF50;
+}
+
+.cart-view__actions {
+  display: flex;
+  gap: 16px;
+  justify-content: center;
+}
+</style>
