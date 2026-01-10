@@ -1,5 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import { useCartStore } from '@/stores/cart'
+import { useSessionStore } from '@/stores/session'
 
 
 const router = createRouter({
@@ -34,6 +35,34 @@ const router = createRouter({
         }
       }
     },
+    {
+      path: '/payment',
+      name: 'payment',
+      component: () => import('@/views/PaymentView.vue'),
+      beforeEnter: (to, from, next) => {
+        // Route guard: redirect to /scan if cart is empty
+        const cartStore = useCartStore()
+        if (cartStore.totalItems === 0) {
+          next('/scan')
+        } else {
+          next()
+        }
+      }
+    },
+    {
+      path: '/receipt',
+      name: 'receipt',
+      component: () => import('@/views/ReceiptView.vue'),
+      beforeEnter: (to, from, next) => {
+        // Route guard: redirect to / if no receipt exists
+        const sessionStore = useSessionStore()
+        if (!sessionStore.lastReceiptId) {
+          next('/')
+        } else {
+          next()
+        }
+      }
+    }
   ]
 })
 
